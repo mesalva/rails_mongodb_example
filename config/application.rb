@@ -22,5 +22,9 @@ module RailsMongodbExample
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
+
+    config.gem "mongoid", :lib => "mongoid", :version => "0.9.11"
+   
+    #config.frameworks -= [ :active_record ]
   end
 end
