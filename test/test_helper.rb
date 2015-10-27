@@ -18,14 +18,16 @@ class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   #fixtures :all
   setup do
-  	  DB = Mongo::Client.new([ '127.0.0.1:27017' ], :database => 'test')
+  	  db_config = YAML.load_file("#{Rails.root}/config/database.mongo.yml")[Rails.env]
+  	  db = Mongo::Client.new([ "#{db_config[:host]||'localhost'}:#{db_config[:port]||27017}" ],
+  	  	 :database => db_config[:database]||"test")
 
 	  #p "data: #{DB[:users].find.to_a.size}"
-	  DB[:users].drop
-	  DB[:posts].drop
-	  DB[:user_rankings].drop
+	  db[:users].drop
+	  db[:posts].drop
+	  db[:user_rankings].drop
 
-	  fixture_some_data = Mongo::Fixture.new :ranking, DB
+	  fixture_some_data = Mongo::Fixture.new :ranking, db
 
   end
   

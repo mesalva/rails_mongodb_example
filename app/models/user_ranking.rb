@@ -7,13 +7,14 @@ class UserRanking
   validates_uniqueness_of :path, :scope => :user_id
   validates_presence_of :user_id, :points
 
+  index :path => 1
+  index :points => 1
+
+
   def self.append_points(params)
   	points = params[:points].to_i
-
   	user_ranking = UserRanking.find_or_create_by(user_id: params[:user_id], path: params[:path])
-  	user_ranking.points||=0
-  	user_ranking.points += points
-  	user_ranking.save!
+  	user_ranking.inc(points: points)
   	user_ranking
   end
 

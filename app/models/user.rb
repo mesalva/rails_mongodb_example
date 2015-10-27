@@ -8,6 +8,9 @@ class User
   validates_uniqueness_of :user_id
   validates_presence_of :user_id, :points
 
+  index :points => 1
+  index :user_id => 1
+
   after_initialize :init
 
   def init
@@ -16,7 +19,6 @@ class User
 
   def self.append_points(user_id, points)
     user = User.find_or_create_by(user_id: user_id)
-    user.points += points
-    user.save!
+    user.inc(points: points)
   end
 end
