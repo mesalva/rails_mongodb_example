@@ -6,7 +6,7 @@ class UserTest < ActiveSupport::TestCase
   # end
 
   setup do
-  	#@user = users(:one)
+  	@user = User.find ActiveRecord::FixtureSet.identify('one')
   end
 
   test "should create a user sucessfully" do

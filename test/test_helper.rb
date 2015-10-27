@@ -23,6 +23,6 @@ class ActiveSupport::TestCase
   DB[:users].drop
   DB[:posts].drop
 
-  fixture_some_data = Mongo::Fixture.new :users, DB
+  fixture_some_data = Mongo::Fixture.new :ranking, DB
 
 end
