@@ -2,10 +2,10 @@
 
 one:
   user_id: 1
-  path: /aula/1/exercicio/1
+  path: aula/1/exercicio/1
   points: 1
 
 two:
   user_id: 1
-  path: /aula/1
-  points: 2
+  path: aula/1
+  points: 3

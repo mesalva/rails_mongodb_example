@@ -2,7 +2,7 @@ require 'test_helper'
 
 class UserRankingsControllerTest < ActionController::TestCase
   setup do
-    @user_ranking = UserRanking.find_by(path: "/aula/1/exercicio/1", user_id: 1)
+    @user_ranking = UserRanking.find_by(path: "aula/1/exercicio/1", user_id: 1)
   end
 
   test "should get index" do
