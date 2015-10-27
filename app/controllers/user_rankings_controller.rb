@@ -21,11 +21,13 @@ class UserRankingsController < ApplicationController
   def edit
   end
 
-  # POST /user_rankings
-  # POST /user_rankings.json
-  def create
-    @user_ranking = UserRanking.create_or_append(user_ranking_params)
+  def path_index
+    limit = params[:limit]||10
+    offset = params[:offset]||0
+    @user_rankings = UserRanking.find_by_path(request.path.gsub('/rankings/',''), limit, offset)
+  end
 
+  def render_result
     respond_to do |format|
       if @user_ranking.save
         format.html { redirect_to @user_ranking, notice: 'User ranking was successfully created.' }
@@ -35,6 +37,20 @@ class UserRankingsController < ApplicationController
         format.json { render json: @user_ranking.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  def path_create
+    @user_ranking = UserRanking.create_or_append(user_ranking_params.merge(path: request.path.gsub('/rankings/','')))
+
+    render_result
+  end
+
+  # POST /user_rankings
+  # POST /user_rankings.json
+  def create
+    @user_ranking = UserRanking.create_or_append(user_ranking_params)
+
+    render_result
   end
 
   private

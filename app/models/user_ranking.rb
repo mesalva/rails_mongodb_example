@@ -17,6 +17,10 @@ class UserRanking
   	user_ranking
   end
 
+  def self.find_by_path(path, limit, offset)
+    UserRanking.all(path: path).order_by(points: :desc).limit(limit).offset(offset)
+  end
+
   def self.create_or_append(params)
   	path = params[:path]
   	points = params[:points].to_i
