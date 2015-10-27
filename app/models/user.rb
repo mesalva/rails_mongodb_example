@@ -13,4 +13,10 @@ class User
   def init
   	self.points||=0
   end
+
+  def self.append_points(user_id, points)
+    user = User.find_or_create_by(user_id: user_id)
+    user.points += points
+    user.save!
+  end
 end

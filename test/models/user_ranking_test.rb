@@ -20,6 +20,9 @@ class UserRankingTest < ActiveSupport::TestCase
     parent_ranking = UserRanking.find_by(path: "aula/1", user_id: 1)
     assert_equal parent_ranking.points, 18
 
+    parent_user = User.find_by(user_id: 1)
+    assert_equal parent_user.points, 16
+
   end
 
 end
