@@ -23,6 +23,7 @@ class ActiveSupport::TestCase
 	  #p "data: #{DB[:users].find.to_a.size}"
 	  DB[:users].drop
 	  DB[:posts].drop
+	  DB[:user_rankings].drop
 
 	  fixture_some_data = Mongo::Fixture.new :ranking, DB
 

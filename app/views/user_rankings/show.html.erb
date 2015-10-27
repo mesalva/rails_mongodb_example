@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>User:</strong>
+  <%= @user_ranking.user_id %>
+</p>
+
+<p>
+  <strong>Path:</strong>
+  <%= @user_ranking.path %>
+</p>
+
+<p>
+  <strong>Points:</strong>
+  <%= @user_ranking.points %>
+</p>
+
+<%= link_to 'Edit', edit_user_ranking_path(@user_ranking) %> |
+<%= link_to 'Back', user_rankings_path %>
