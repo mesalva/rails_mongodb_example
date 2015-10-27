@@ -2,7 +2,7 @@ require 'test_helper'
 
 class PostsControllerTest < ActionController::TestCase
   setup do
-    @post = posts(:one)
+    @post = Post.find_by(title: "one")
   end
 
   test "should get index" do
@@ -11,17 +11,12 @@ class PostsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:posts)
   end
 
-  test "should get new" do
-    get :new
-    assert_response :success
-  end
-
   test "should create post" do
     assert_difference('Post.count') do
       post :create, post: { body: @post.body, title: @post.title }
     end
 
-    assert_redirected_to post_path(assigns(:post))
+    assert_response :created
   end
 
   test "should show post" do
@@ -29,14 +24,9 @@ class PostsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "should get edit" do
-    get :edit, id: @post
-    assert_response :success
-  end
-
   test "should update post" do
     patch :update, id: @post, post: { body: @post.body, title: @post.title }
-    assert_redirected_to post_path(assigns(:post))
+    assert_response :ok
   end
 
   test "should destroy post" do
@@ -44,6 +34,6 @@ class PostsControllerTest < ActionController::TestCase
       delete :destroy, id: @post
     end
 
-    assert_redirected_to posts_path
+    assert_response :no_content
   end
 end

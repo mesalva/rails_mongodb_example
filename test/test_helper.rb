@@ -10,19 +10,23 @@ class Mongo::Collection
 	end
 
 	def insert(document, options={})
-		insert_one(document, options={})
+		insert_one(document, options)
 	end
 end
 
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   #fixtures :all
-  DB = Mongo::Client.new([ '127.0.0.1:27017' ], :database => 'test')
+  setup do
+  	  DB = Mongo::Client.new([ '127.0.0.1:27017' ], :database => 'test')
 
-  #p "data: #{DB[:users].find.to_a.size}"
-  DB[:users].drop
-  DB[:posts].drop
+	  #p "data: #{DB[:users].find.to_a.size}"
+	  DB[:users].drop
+	  DB[:posts].drop
 
-  fixture_some_data = Mongo::Fixture.new :ranking, DB
+	  fixture_some_data = Mongo::Fixture.new :ranking, DB
+
+  end
+  
 
 end
