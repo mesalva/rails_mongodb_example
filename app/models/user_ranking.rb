@@ -26,7 +26,8 @@ class UserRanking
 
   	initial = 0
   	pairs.times do |position|
-  		parent_path = path_parts.slice(0,initial+=2).map(&:inspect).join('/').gsub(/\\/,'').gsub(/"/,'')
+  		parent_path = path_parts.slice(0,initial+=2)
+  			.map(&:inspect).join('/').gsub(/\\/,'').gsub(/"/,'')
   		UserRanking.append_points(user_id: params[:user_id], path: parent_path, points: params[:points])
   	end
 
