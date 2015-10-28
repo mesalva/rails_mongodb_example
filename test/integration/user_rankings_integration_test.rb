@@ -55,7 +55,7 @@ class UserRankingsIntegrationTest < ActionDispatch::IntegrationTest
   	end
 
   	get "/aula/1/exercicio/2"
-	assert_response :ok
+	  assert_response :ok
   	assert_json(@response.body) do
   	  value = 10
   	  10.times do |time|
