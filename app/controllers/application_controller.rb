@@ -7,13 +7,40 @@ class ApplicationController < ActionController::Base
 
   	before_filter :set_format
 
+  	before_filter :cors_preflight_check
+  	after_filter :cors_set_access_control_headers
+
   	rescue_from ValidationException, :with => :handle_validation_exception
+
+  	rescue_from Exception, :with => :handle_exception
 
     def handle_validation_exception(exception)
       render json: {error: exception.errors}.to_json, status: :unprocessable_entity
     end
 
+    def handle_validation_exception(exception)
+      render json: {error: exception.message}.to_json, status: :internal_server_error
+    end
+
 	def set_format
   		request.format = 'json'
+	end
+
+	def cors_set_access_control_headers
+	    headers['Content-Type'] = 'application/json'
+	    headers['Accept'] = 'application/json'
+	    headers['Access-Control-Allow-Origin'] = '*'
+	    headers['Access-Control-Allow-Methods'] = 'POST, GET, PUT, DELETE, OPTIONS'
+	    headers['Access-Control-Allow-Headers'] = 'Origin, Content-Type, Accept, Authorization, Token'
+	    headers['Access-Control-Max-Age'] = "1728000"
+	end
+	 
+	def cors_preflight_check
+        headers['Content-Type'] = 'application/json'
+        headers['Accept'] = 'application/json'
+        headers['Access-Control-Allow-Origin'] = '*'
+        headers['Access-Control-Allow-Methods'] = 'POST, GET, PUT, DELETE, OPTIONS'
+        headers['Access-Control-Allow-Headers'] = '*'
+        headers['Access-Control-Max-Age'] = '1728000'
 	end
 end
