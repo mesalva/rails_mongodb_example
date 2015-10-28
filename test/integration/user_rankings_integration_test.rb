@@ -74,5 +74,26 @@ class UserRankingsIntegrationTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
   end
 
+  test "should paginate ranking results" do
+    10.times do |time|
+      post "/aula/1/exercicio/2", user_ranking: {points: time + 1, user_id: time + 1}
+      assert_response :created
+    end
+
+    value = 10
+    10.times do |time|
+      get "/aula/1/exercicio/2?limit=1&offset=#{time}"
+      assert_json(@response.body) do
+        item 0 do
+          has 'user_id', value
+          has 'points', value
+          value-=1
+        end
+      end
+    end
+
+
+  end
+
 
 end

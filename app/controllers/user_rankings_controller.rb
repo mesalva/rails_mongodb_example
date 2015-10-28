@@ -22,7 +22,7 @@ class UserRankingsController < ApplicationController
   end
 
   def path_index
-    limit = params[:limit]||10
+    limit = params[:limit]||RANKING_PAGE_LIMIT
     offset = params[:offset]||0
     @user_rankings = UserRanking.find_by_path(request.path, limit, offset)
   end
