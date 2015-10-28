@@ -5,21 +5,18 @@ class ApplicationController < ActionController::Base
 
   	skip_before_action :verify_authenticity_token
 
-  	before_filter :set_format
-
-  	before_filter :cors_preflight_check
+  	before_filter :set_format, :cors_preflight_check
   	after_filter :cors_set_access_control_headers
-
-  	rescue_from ValidationException, :with => :handle_validation_exception
 
   	rescue_from Exception, :with => :handle_exception
 
-    def handle_validation_exception(exception)
-      render json: {error: exception.errors}.to_json, status: :unprocessable_entity
-    end
-
-    def handle_validation_exception(exception)
-      render json: {error: exception.message}.to_json, status: :internal_server_error
+    def handle_exception(exception)
+      if exception.is_a?(ValidationException)
+      	render json: {error: exception.errors}.to_json, status: :unprocessable_entity
+      else
+      	render json: {error: exception.message}.to_json, status: :internal_server_error
+      end
+      
     end
 
 	def set_format
