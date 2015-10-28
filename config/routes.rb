@@ -2,8 +2,8 @@ Rails.application.routes.draw do
   resources :user_rankings
   resources :users
   resources :posts
-  get  "rankings/*all" => 'user_rankings#path_index'
-  post "rankings/*all" => 'user_rankings#path_create'
+  get  "*all" => 'user_rankings#path_index'
+  post "*all" => 'user_rankings#path_create'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

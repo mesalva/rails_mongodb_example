@@ -24,7 +24,7 @@ class UserRankingsController < ApplicationController
   def path_index
     limit = params[:limit]||10
     offset = params[:offset]||0
-    @user_rankings = UserRanking.find_by_path(request.path.gsub('/rankings/',''), limit, offset)
+    @user_rankings = UserRanking.find_by_path(request.path, limit, offset)
   end
 
   def render_result
@@ -40,7 +40,7 @@ class UserRankingsController < ApplicationController
   end
 
   def path_create
-    @user_ranking = UserRanking.create_or_append(user_ranking_params.merge(path: request.path.gsub('/rankings/','')))
+    @user_ranking = UserRanking.create_or_append(user_ranking_params.merge(path: request.path))
 
     render_result
   end

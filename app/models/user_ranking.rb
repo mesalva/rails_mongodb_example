@@ -1,3 +1,4 @@
+# Model for any relation between a user and a ranking
 class UserRanking
   include Mongoid::Document
   field :user_id, type: Integer
@@ -13,17 +14,20 @@ class UserRanking
 
   def self.append_points(params)
   	points = params[:points].to_i
+
   	user_ranking = UserRanking.find_or_create_by(user_id: params[:user_id], path: params[:path])
   	user_ranking.inc(points: points)
   	user_ranking
   end
 
   def self.find_by_path(path, limit, offset)
+    path.slice!(0) if path.starts_with?("/")
     UserRanking.all(path: path).order_by(points: :desc).limit(limit).offset(offset)
   end
 
   def self.create_or_append(params)
   	path = params[:path]
+    path.slice!(0) if path.starts_with?("/")
   	points = params[:points].to_i
   	user_id = params[:user_id].to_i
   	path_parts = path.split('/')
