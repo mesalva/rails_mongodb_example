@@ -61,7 +61,7 @@ class UserRankingsIntegrationTest < ActionDispatch::IntegrationTest
   	  10.times do |time|
   	  	item time do
 	      	has 'user_id', value
-			has 'points', value
+			    has 'points', value
 	      	value-=1
 	      end
   	  end
