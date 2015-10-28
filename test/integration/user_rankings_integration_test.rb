@@ -42,6 +42,11 @@ class UserRankingsIntegrationTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "should validate path format status" do
+  	post "/aula/1/hey", user_ranking: {points: 40, user_id: 1}
+  	assert_response :unprocessable_entity
+  end
+
   test "should ordenate users on a path" do
   	
   	10.times do |time|
@@ -62,6 +67,11 @@ class UserRankingsIntegrationTest < ActionDispatch::IntegrationTest
   	  end
     end  	
 
+  end
+
+  test "should validate params on create index" do
+    post "/aula/1/exercicio/2", user_ranking: {points: 10}
+    assert_response :unprocessable_entity
   end
 
 

@@ -1,6 +1,12 @@
 class UserRankingsController < ApplicationController
   before_action :set_user_ranking, only: [:show, :edit, :update, :destroy]
 
+  rescue_from ValidationException, :with => :handle_validation_exception
+
+  def handle_validation_exception(exception)
+    render json: {error: exception.errors}.to_json, status: :unprocessable_entity
+  end
+
   # GET /user_rankings
   # GET /user_rankings.json
   def index
@@ -29,7 +35,7 @@ class UserRankingsController < ApplicationController
 
   def render_result
     respond_to do |format|
-      if @user_ranking.save
+      if @user_ranking.valid?
         format.html { redirect_to @user_ranking, notice: 'User ranking was successfully created.' }
         format.json { render :show, status: :created, location: @user_ranking }
       else

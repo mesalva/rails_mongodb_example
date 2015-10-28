@@ -37,4 +37,9 @@ class UsersControllerTest < ActionController::TestCase
 
     assert_response :no_content
   end
+
+  test "should validate params" do
+    post :create, user: { name: @user.name, points: @user.points }
+    assert_response :unprocessable_entity
+  end
 end

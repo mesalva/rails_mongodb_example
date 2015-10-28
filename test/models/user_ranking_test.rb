@@ -25,4 +25,11 @@ class UserRankingTest < ActiveSupport::TestCase
 
   end
 
+  test "should validate presence of fields" do
+    assert_raises(ValidationException) {user_ranking = UserRanking.create_or_append(nil)}
+    assert_raises(ValidationException) {user_ranking = UserRanking.create_or_append(path: "aula/1")}
+    assert_raises(ValidationException) {user_ranking = UserRanking.create_or_append(path: "aula/1", user_id: 1)}
+    assert_raises(ValidationException) {user_ranking = UserRanking.create_or_append(path: "aula/1", points: 1)}
+  end
+
 end
