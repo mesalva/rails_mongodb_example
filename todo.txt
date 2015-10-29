@@ -1,4 +1,5 @@
 # totalizadores de usuario na users
-# event_type no ranking
+## acumulando em users a quantidade de recursos internos unicos que receberam pontuação
+
+# collections por primeiro nivel do path
 # processador fila
-# 
