@@ -22,16 +22,15 @@ class ActiveSupport::TestCase
   	  db_config = YAML.load_file("#{Rails.root}/config/database.mongo.yml")[Rails.env]
 
   	  #Create mongo client for mongo fixtures
-  	  db = Mongo::Client.new([ "#{db_config[:host]||'localhost'}:#{db_config[:port]||27017}" ],
+  	  connection = Mongo::Client.new([ "#{db_config[:host]||'localhost'}:#{db_config[:port]||27017}" ],
   	  	 :database => db_config[:database]||"test")
 
-  	  # Clear Collections
-	  db[:users].drop
-	  db[:posts].drop
-	  db[:user_rankings].drop
-
+  	  p "==========> #{connection.database.collections}"
+  	  connection.database.collections.each do |collection|
+  	  	collection.drop
+  	  end
 	  # Load the fixtures to test database
-	  fixture_some_data = Mongo::Fixture.new :ranking, db
+	  fixture_some_data = Mongo::Fixture.new :ranking, connection
 
   end
   

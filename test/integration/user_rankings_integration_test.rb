@@ -37,7 +37,7 @@ class UserRankingsIntegrationTest < ActionDispatch::IntegrationTest
   	assert_json(@response.body) do
       item 0 do
       	has 'user_id', 1
-        has 'points', 4
+        has 'points', 1
       end
     end
   end

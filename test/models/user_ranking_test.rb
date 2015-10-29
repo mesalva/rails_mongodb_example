@@ -17,8 +17,8 @@ class UserRankingTest < ActiveSupport::TestCase
   	assert user_ranking.errors.empty?
   	assert_equal user_ranking.points, 15
 
-    parent_ranking = UserRanking.find_by(path: "aula/1", user_id: 1)
-    assert_equal parent_ranking.points, 18
+    parent_ranking = UserRanking.find_in_path(path: "aula/1", user_id: 1)
+    assert_equal parent_ranking.points, 15
 
     parent_user = User.find_by(user_id: 1)
     assert_equal parent_user.points, 16

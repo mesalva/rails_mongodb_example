@@ -26,21 +26,35 @@ class UserRanking
     errors.add(:path, "Invalid Path: #{self.path}") unless self.path.split('/').length%2==0
   end
 
+  def self.get_collection_name(path)
+    path.split('/')[0..1].map(&:inspect).join('_').gsub(/\\/,'').gsub(/"/,'')
+  end
+
   def self.append_points(params)
   	points = params[:points].to_i
-  	user_ranking = UserRanking.where(user_id: params[:user_id], path: params[:path]).first
+    path = params[:path]
+    collection_name = get_collection_name(path)
+    #p "===============> collection name: #{collection_name}"
+  	user_ranking = UserRanking.with(collection: collection_name).where(user_id: params[:user_id], path: path).first
     unless user_ranking
-      user_ranking = UserRanking.new(user_id: params[:user_id], path: params[:path], points: params[:points])
+      user_ranking = UserRanking.new(user_id: params[:user_id], path: path, points: points)
     else
-      user_ranking.inc(points: points)
+      user_ranking.points+=points
     end
-  	user_ranking.save!
+  	user_ranking.with(collection: collection_name).save!
     user_ranking
+  end
+
+  def self.find_in_path(options)
+    #p "===============> collection name: #{get_collection_name(options[:path])}"
+    self.with(collection: get_collection_name(options[:path])).find_by(options)
   end
 
   def self.find_by_path(path, limit, offset)
     path.slice!(0) if path.starts_with?("/")
-    UserRanking.all(path: path).order_by(points: :desc).limit(limit).offset(offset)
+    collection_name = get_collection_name(path)
+    #p "===============> collection name: #{collection_name}"
+    UserRanking.with(collection: collection_name).all(path: path).order_by(points: :desc).limit(limit).offset(offset)
   end
 
   def self.validate(params)
