@@ -9,9 +9,18 @@ class UserRanking
   validates_presence_of :user_id, :points
 
   index :path => 1
-  index :points => 1
+  index :points => -1
 
   validate :validate_path
+
+  attr_accessor :was_a_new_record
+
+  before_save :check_new_record
+
+  def check_new_record
+    @was_a_new_record = new_record?
+    return true
+  end
 
   def validate_path
     errors.add(:path, "Invalid Path: #{self.path}") unless self.path.split('/').length%2==0
@@ -19,10 +28,13 @@ class UserRanking
 
   def self.append_points(params)
   	points = params[:points].to_i
-
-  	user_ranking = UserRanking.find_or_create_by(user_id: params[:user_id], path: params[:path])
-  	user_ranking.inc(points: points)
-  	user_ranking.save
+  	user_ranking = UserRanking.where(user_id: params[:user_id], path: params[:path]).first
+    unless user_ranking
+      user_ranking = UserRanking.new(user_id: params[:user_id], path: params[:path], points: params[:points])
+    else
+      user_ranking.inc(points: points)
+    end
+  	user_ranking.save!
     user_ranking
   end
 
@@ -37,8 +49,8 @@ class UserRanking
       errors[:params] = "Params user_id, points and path can't be blank"
     else
       errors[:user_id] = "User id can't be blank" unless params[:user_id]
-      errors[:path] = "Path id can't be blank" unless params[:path]
-      errors[:points] = "Path id can't be blank" unless params[:points]
+      errors[:path] = "Path can't be blank" unless params[:path]
+      errors[:points] = "Points can't be blank" unless params[:points]
     end
     raise ValidationException.new(errors) unless errors.empty?
   end
@@ -56,15 +68,19 @@ class UserRanking
   	pairs = length/2 - 1
 
   	initial = 0
+    score_paths = [path_parts[length-2]]
   	pairs.times do |position|
   		parent_path = path_parts.slice(0,initial+=2)
   			.map(&:inspect).join('/').gsub(/\\/,'').gsub(/"/,'')
+      #score_paths << parent_path.split('/').first
   		UserRanking.append_points(user_id: params[:user_id], path: parent_path, points: points)
   	end
 
-  	User.append_points(user_id, points)
+  	user_ranking = UserRanking.append_points(params)
 
-  	UserRanking.append_points(params)
+    User.append_points(user_id, points, user_ranking.was_a_new_record ? score_paths : [])
+
+    user_ranking
   end
 
 

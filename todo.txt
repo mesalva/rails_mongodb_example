@@ -1,0 +1,4 @@
+# totalizadores de usuario na users
+# event_type no ranking
+# processador fila
+# 

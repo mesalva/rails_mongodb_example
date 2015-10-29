@@ -11,8 +11,8 @@ class ApplicationController < ActionController::Base
   	rescue_from Exception, :with => :handle_exception
 
     def handle_exception(exception)
-      if exception.is_a?(ValidationException)
-      	render json: {error: exception.errors}.to_json, status: :unprocessable_entity
+      if exception.is_a?(ValidationException) || exception.is_a?(Mongoid::Errors::Validations)
+      	render json: {error: exception.message}.to_json, status: :unprocessable_entity
       else
       	render json: {error: exception.message}.to_json, status: :internal_server_error
       end
