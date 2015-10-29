@@ -28,27 +28,36 @@ class UserRankingsController < ApplicationController
   end
 
   def render_result
-    respond_to do |format|
-      if @user_ranking.valid?
-        format.html { redirect_to @user_ranking, notice: 'User ranking was successfully created.' }
-        format.json { render :show, status: :created, location: @user_ranking }
-      else
-        format.html { render :new }
-        format.json { render json: @user_ranking.errors, status: :unprocessable_entity }
-      end
+    if @errors
+      render json: @errors, status: :unprocessable_entity
+    else
+      head :created
     end
+    
   end
 
   def path_create
-    @user_ranking = UserRanking.create_or_append(user_ranking_params.merge(path: request.path))
+    create_params= user_ranking_params.merge(path: request.path)
+    handle_queue(create_params)
 
     render_result
+  end
+
+  def handle_queue(create_params)
+    @errors = UserRanking.validate(create_params)
+    unless (Rails.env.test?)
+      MESSAGING_SERVICE.publish(create_params)
+    else
+      UserRanking.create_or_append(create_params)
+    end
+    
   end
 
   # POST /user_rankings
   # POST /user_rankings.json
   def create
-    @user_ranking = UserRanking.create_or_append(user_ranking_params)
+    create_params= user_ranking_params.merge(user_ranking_params)
+    handle_queue(create_params)
 
     render_result
   end

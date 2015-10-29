@@ -51,6 +51,7 @@ class UserRankingsIntegrationTest < ActionDispatch::IntegrationTest
   	
   	10.times do |time|
   		post "/aula/1/exercicio/2", user_ranking: {points: time + 1, user_id: time + 1}
+      #p "================> #{@response.body}"
   		assert_response :created
   	end
 
