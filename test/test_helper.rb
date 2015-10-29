@@ -25,7 +25,6 @@ class ActiveSupport::TestCase
   	  connection = Mongo::Client.new([ "#{db_config[:host]||'localhost'}:#{db_config[:port]||27017}" ],
   	  	 :database => db_config[:database]||"test")
 
-  	  p "==========> #{connection.database.collections}"
   	  connection.database.collections.each do |collection|
   	  	collection.drop
   	  end
