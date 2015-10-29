@@ -24,7 +24,8 @@ module RailsMongodbExample
     config.active_record.raise_in_transactional_callbacks = true
 
     config.gem "mongoid", :lib => "mongoid", :version => "0.9.11"
-   
+    
+    config.autoload_paths += Dir["#{config.root}/lib/**/"]
     #config.frameworks -= [ :active_record ]
   end
 end

@@ -1,5 +1,5 @@
 # totalizadores de usuario na users
 ## acumulando em users a quantidade de recursos internos unicos que receberam pontuação
 
-# collections por primeiro nivel do path
+# collections por primeiro nivel do path - ok
 # processador fila

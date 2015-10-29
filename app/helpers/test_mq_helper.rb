@@ -1,0 +1,2 @@
+module TestMqHelper
+end
