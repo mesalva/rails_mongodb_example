@@ -9,7 +9,7 @@ q  = ch.queue("rankings", :auto_delete => true)
 x  = ch.default_exchange
 
 q.subscribe do |delivery_info, metadata, payload|
-  puts "Received #{payload}"
+  UserRanking.create_or_append(JSON.parse(payload))
 end
 
 #sleep 1.0
