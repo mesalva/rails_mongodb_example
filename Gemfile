@@ -43,6 +43,8 @@ group :development, :test do
   #gem 'debugger'
   gem 'pry'
 
+  gem 'minitest-spec-rails'
+
   gem "assert_json"
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 2.0'
