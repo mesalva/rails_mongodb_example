@@ -14,7 +14,7 @@ begin
 	  begin
 	  	UserRanking.create_or_append(JSON.parse(payload))
 	  rescue => e
-	  	MessagingErrorMailer.ranking_error_message(payload, e.message)
+	  	MessagingErrorMailer.ranking_error_message(payload, e.message).deliver_now
 	  end
 	end
 rescue => e
