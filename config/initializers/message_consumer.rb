@@ -20,6 +20,7 @@ begin
 rescue => e
 	p "error consuming queue: #{e.message}"
 	MessagingErrorMailer.ranking_error_message("Error consumig queue", e.message).deliver_now
+	retry
 end
 #sleep 1.0
 #at exit {conn.close}
