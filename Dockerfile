@@ -10,9 +10,9 @@ RUN apt-get update -q
 RUN apt-get install -y mongodb-org
 RUN mkdir -p /data/db
 RUN mongod --repair
-RUN mongod --fork --logpath "/var/log/mongo.log"
+RUN service mongod restart
 RUN ps aux | grep mongo
-RUN nmap -sT -O localhost
+RUN netstat -lp
 
 RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
 RUN curl -sSL https://get.rvm.io | bash -s stable
