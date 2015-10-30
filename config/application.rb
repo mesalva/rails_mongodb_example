@@ -26,6 +26,17 @@ module RailsMongodbExample
     config.gem "mongoid", :lib => "mongoid", :version => "0.9.11"
     
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
+
+    config.action_mailer.delivery_method = :smtp
+    
+    config.action_mailer.smtp_settings = {
+      address:              'smtp.mandrillapp.com',
+      port:                 587,
+      #domain:               'mesalva.com',
+      user_name:            'ricardo.baumann@mesalva.com',
+      password:             'PxbmpMO8VLwLyR3nN70b0g',
+      authentication:       'plain',
+      enable_starttls_auto: true  }
     #config.frameworks -= [ :active_record ]
   end
 end

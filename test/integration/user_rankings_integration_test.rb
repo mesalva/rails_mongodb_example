@@ -32,7 +32,7 @@ class UserRankingsIntegrationTest < ActionDispatch::IntegrationTest
       end
     end
 
-	get "/aula/1"
+	 get "/aula/1"
   	assert_response :ok
   	assert_json(@response.body) do
       item 0 do
