@@ -1,6 +1,6 @@
 class MessagingService
   def initialize
-    conn = Bunny.new("amqp://guest:guest@localhost:5672")
+    conn = Bunny.new
     conn.start
 
     ch = conn.create_channel
