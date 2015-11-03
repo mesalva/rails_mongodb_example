@@ -8,7 +8,7 @@
 3. Inside the application folder, run
   
   bundle install
-  rails s
+  unicorn -p 3000
 
 4. To create a ranking entry, do POST /aula/1/exercicio/1 {user_id: 1, points: 2}
 5. To retrieve a ranking path, do GET /aula/1/exercicio/1
