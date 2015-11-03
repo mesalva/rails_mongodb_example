@@ -16,7 +16,6 @@ RUN apt-get install -qy pkg-config
 RUN /bin/bash -c -l 'bundle config path "$HOME/bundler"'
 RUN git clone https://github.com/mesalva/ranking_points
 WORKDIR ranking_points
-RUN git checkout develop
 RUN /bin/bash -c -l 'bundle install --path vendor/cache'
 EXPOSE 3000
-CMD /bin/bash -c -l 'source /etc/profile.d/rvm.sh && git pull origin develop && HOME=/ranking_points bundle update && HOME=/ranking_points bundle install --path vendor/cache && RAILS_ENV=production unicorn -b 0.0.0.0 -p 3000'
+CMD /bin/bash -c -l 'source /etc/profile.d/rvm.sh && git pull origin master && HOME=/ranking_points bundle update && HOME=/ranking_points bundle install --path vendor/cache && RAILS_ENV=production unicorn -b 0.0.0.0 -p 3000'
