@@ -21,6 +21,6 @@ rescue => e
 	Rails.logger.debug "error consuming queue: #{e.message}"
 	MessagingErrorMailer.ranking_error_message("Error consuming queue", e.message).deliver_now
 	retry
-end unless Rails.env.test?
+end if USE_MESSAGE_QUEUE
 #sleep 1.0
 #at exit {conn.close}

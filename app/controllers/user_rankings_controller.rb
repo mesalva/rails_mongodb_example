@@ -45,10 +45,10 @@ class UserRankingsController < ApplicationController
 
   def handle_queue(create_params)
     @errors = UserRanking.validate(create_params)
-    if (Rails.env.test? || params[:immediate])
-      UserRanking.create_or_append(create_params)
-    else
+    if USE_MESSAGE_QUEUE
       MESSAGING_SERVICE.publish(create_params)
+    else
+      UserRanking.create_or_append(create_params)
     end
     
   end
