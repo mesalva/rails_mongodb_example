@@ -19,4 +19,4 @@ WORKDIR ranking_points
 RUN git checkout develop
 RUN /bin/bash -c -l 'bundle install --path vendor/cache'
 EXPOSE 3000
-CMD /bin/bash -c -l 'source /etc/profile.d/rvm.sh && git pull origin develop && HOME=/ranking_points bundle update && HOME=/ranking_points bundle install --path vendor/cache && HOME=/ranking_points rails s RAILS_ENV=production '
+CMD /bin/bash -c -l 'source /etc/profile.d/rvm.sh && git pull origin develop && HOME=/ranking_points bundle update && HOME=/ranking_points bundle install --path vendor/cache && RAILS_ENV=production rails s'
