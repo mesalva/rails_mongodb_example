@@ -92,7 +92,7 @@ test:
     default:
       database: test
       hosts:
-        - mongo:27017
+        - localhost:27017
       options:
         read: primary
         # In the test environment we lower the retries and retry interval to
