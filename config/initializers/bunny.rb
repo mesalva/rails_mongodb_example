@@ -1,3 +1,4 @@
 #MESSAGING_SERVICE = MessagingService.new(ENV.fetch("AMQP_URL"))
-MESSAGING_SERVICE = MessagingService.new unless Rails.env.test?
+USE_MESSAGE_QUEUE=false
+MESSAGING_SERVICE = MessagingService.new if USE_MESSAGE_QUEUE
 #MESSAGING_SERVICE.start

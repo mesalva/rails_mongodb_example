@@ -19,8 +19,9 @@ WORKDIR ranking_points
 RUN git checkout develop
 RUN /bin/bash -c -l 'bundle install --path vendor/cache'
 EXPOSE 3000
-CMD mongod --fork --logpath "/var/log/mongo.log"
-CMD /bin/bash -c -l 'source /etc/profile.d/rvm.sh && 
-	git pull origin master && HOME=/ranking_points bundle update && 
-	HOME=/ranking_points bundle install --path vendor/cache && 
-	HOME=/ranking_points rake db:migrate && HOME=/ranking_points rails s'
+CMD /bin/bash -c -l 'source /etc/profile.d/rvm.sh'
+CMD /bin/bash -c -l 'git pull origin master' 
+CMD /bin/bash -c -l 'HOME=/ranking_points bundle update'
+CMD /bin/bash -c -l 'HOME=/ranking_points bundle install --path vendor/cache'
+CMD /bin/bash -c -l 'HOME=/ranking_points rake test'
+CMD /bin/bash -c -l 'HOME=/ranking_points rails s'
