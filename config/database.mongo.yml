@@ -1,9 +1,13 @@
 defaults: &defaults
   adapter: mongo
-  host: mongo
+  host: localhost
 development:
   <<: *defaults
   database: test
 test:
   <<: *defaults
+  database: test
+production:
+  <<: *defaults
+  host: mongo
   database: test
