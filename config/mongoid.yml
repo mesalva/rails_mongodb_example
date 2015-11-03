@@ -103,7 +103,7 @@ test:
 
 production:
   # Configure available database sessions. (required)
-  sessions:
+  clients:
     # Defines the default session. (required)
     default:
       # Defines the name of the default database that Mongoid can connect to.
@@ -112,7 +112,7 @@ production:
       # Provides the hosts the default session can connect to. Must be an array
       # of host:port pairs. (required)
       hosts:
-        - localhost:27017
+        - mongo:27017
       options:
         # Change the default write concern. (default = { w: 1 })
         # write:
