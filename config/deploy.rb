@@ -18,6 +18,8 @@ set :rvm_type, :user                     # Defaults to: :auto
 
 set :rvm_ruby_version, '2.2.1'      # Defaults to: 'default'
 
+set :default_shell, '/bin/bash -l'
+
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
@@ -50,12 +52,15 @@ set :rvm_ruby_version, '2.2.1'      # Defaults to: 'default'
 
 namespace :deploy do
   desc 'Restart application'
-  p "============> aki antes"
   task :restart do
 	  on roles(:app) do
 	  	within "#{current_path}" do
 	  		with rails_env: fetch(:rails_env) do
-	  			run "/home/ricardo/.rvm/gems/ruby-2.2.1/gems/bundler-1.10.6/bin/bundle exec unicorn -p 3000"
+	  			execute "bash --login -c 'rvm use 2.2.1'"
+				execute "bash --login -c 'ruby --version'"
+				p "path: #{current_path}"
+				execute "pwd"
+	  			execute "cd #{current_path} && bash --login -c 'bundle exec unicorn -D -p 3000'"
 	  		end
 	  		
 	  	end
