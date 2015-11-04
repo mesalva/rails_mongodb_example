@@ -1,6 +1,6 @@
+#require 'airbrake/capistrano3'
 # Load DSL and set up stages
 require 'capistrano/setup'
-
 # Include default deployment tasks
 require 'capistrano/deploy'
 
@@ -20,6 +20,7 @@ require 'capistrano/deploy'
 require 'capistrano/bundler'
 require 'capistrano/rvm'
 #require 'capistrano-unicorn'
+#require 'rvm-capistrano'
 #require 'capistrano/rails/assets'
 #require 'capistrano/rails/migrations'
 #require 'capistrano/passenger'

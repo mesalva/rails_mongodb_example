@@ -40,10 +40,7 @@ gem "unicorn"
 # Use Capistrano for deployment
 #gem 'capistrano-rails', group: :development
 
-group :development, :test do
-  # Call 'debugger' anywhere in the code to stop execution and get a debugger console
-  #gem 'debugger'
-
+group :development do
   gem 'capistrano'
 
   # rails specific capistrano funcitons
@@ -54,7 +51,16 @@ group :development, :test do
 
   gem "capistrano-rvm"
 
+  gem "rvm-capistrano"
+
   gem 'capistrano-unicorn'
+end
+
+group :development, :test do
+  # Call 'debugger' anywhere in the code to stop execution and get a debugger console
+  #gem 'debugger'
+
+
 
   gem 'pry'
 
