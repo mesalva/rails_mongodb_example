@@ -58,9 +58,8 @@ namespace :deploy do
 	  		with rails_env: fetch(:rails_env) do
 	  			execute "bash --login -c 'rvm use 2.2.1'"
 				execute "bash --login -c 'ruby --version'"
-				p "path: #{current_path}"
 				execute "pwd"
-	  			execute "cd #{current_path} && bash --login -c 'bundle exec unicorn -D -p 3000'"
+	  			execute "cd #{current_path} && bash --login -c 'bundle exec unicorn -p 3000 -D'"
 	  		end
 	  		
 	  	end
