@@ -5,9 +5,8 @@ class PathTest < ActiveSupport::TestCase
   #   assert true
   # end
 
-  test "should create a path sucessfully" do
-  	
-  	set = {:cat => 
+  setup do
+  	@set = {:cat => 
   			{1 => 
   				{:curso => 
   					{2 => 
@@ -38,12 +37,33 @@ class PathTest < ActiveSupport::TestCase
   			}
 
   		  }
-
-  	path = Path.create(structure: set)
-  	assert_equal path.structure, set
-
-  	Path.all
-
-
   end
+
+  test "should create a path sucessfully" do
+
+  	path = Path.create(structure: @set)
+  	assert_equal path.structure, @set
+  end
+
+  test "should recreate a path sucessfully" do
+  	path = Path.create(structure: @set)
+  	assert_equal path.structure, @set
+
+  	path = Path.create(structure: @set)
+  	assert_equal path.structure, @set
+
+  	assert_equal Path.count, 1
+  end
+
+  test "should merge a path sucessfully" do
+	path = Path.create(structure: @set)
+  	assert_equal path.structure, @set
+
+  	uset = @set.merge({:teste => 1})
+
+  	path.update(structure: uset)
+  	assert_equal path.structure, uset
+  end
+
+
 end

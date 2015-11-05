@@ -13,9 +13,9 @@ class PathsControllerTest < ActionController::TestCase
   end
 
   test "should create path" do
-    assert_difference('Path.count') do
-      post :create, path: { structure: @path.structure }
-    end
+    
+    post :create, path: { structure: @path.structure }
+    
     assert_response :created
   end
 
