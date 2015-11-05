@@ -11,6 +11,7 @@ RUN /bin/bash -c -l 'rvm requirements'
 RUN /bin/bash -c -l 'rvm install 2.2.1'
 RUN /bin/bash -c -l 'gem install bundler --no-ri --no-rdoc'
 RUN /bin/bash -c -l 'gem install rails --no-ri --no-rdoc'
+
 RUN /bin/bash -c -l  'gem install rake'
 RUN apt-get install -qy pkg-config
 RUN /bin/bash -c -l 'bundle config path "$HOME/bundler"'

@@ -10,7 +10,7 @@ class User
   validates_uniqueness_of :user_id
   validates_presence_of :user_id, :points
 
-  index :points => 1
+  index :points => -1
   index :user_id => 1
 
   after_initialize :init
