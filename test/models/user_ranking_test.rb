@@ -15,10 +15,10 @@ class UserRankingTest < ActiveSupport::TestCase
 
   	user_ranking = UserRanking.create_or_append(path: "aula/1/exercicio/2", user_id: @user_ranking.user_id, points: 5)
   	assert user_ranking.errors.empty?
-  	assert_equal user_ranking.points, 15
+  	assert_equal user_ranking.points, 5
 
     parent_ranking = UserRanking.find_in_path(path: "aula/1", user_id: 1)
-    assert_equal parent_ranking.points, 15
+    assert_equal parent_ranking.points, 5
 
     parent_user = User.find_by(user_id: 1)
     assert_equal parent_user.points, 16

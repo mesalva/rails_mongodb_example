@@ -35,12 +35,10 @@ class UserRanking
     path = params[:path]
     collection_name = get_collection_name(path)
     #p "===============> collection name: #{collection_name}"
-  	user_ranking = UserRanking.with(collection: collection_name).where(user_id: params[:user_id], path: path).first
-    unless user_ranking
-      user_ranking = UserRanking.new(user_id: params[:user_id], path: path, points: points)
-    else
-      user_ranking.points+=points
-    end
+  	user_ranking = UserRanking.with(collection: collection_name).find_or_initialize_by(user_id: params[:user_id], path: path)
+    
+    user_ranking.points=points
+    
   	user_ranking.with(collection: collection_name).save!
     user_ranking
   end
