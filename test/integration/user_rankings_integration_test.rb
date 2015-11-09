@@ -50,6 +50,14 @@ class UserRankingsIntegrationTest < ActionDispatch::IntegrationTest
   	assert_response :unprocessable_entity
   end
 
+  test "should validate existent path status" do
+    post "/aula/1/exercicio/2", user_ranking: {points: 1, user_id: 1}
+    assert_response :created
+
+    post "/aula/1/exercicio/2", user_ranking: {points: 1, user_id: 1}
+    assert_response :unprocessable_entity    
+  end
+
   test "should ordenate users on a path" do
   	
   	10.times do |time|

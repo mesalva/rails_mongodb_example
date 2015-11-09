@@ -1,0 +1,3 @@
+class ExistentRankingException < ValidationException
+
+end

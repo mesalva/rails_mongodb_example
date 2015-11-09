@@ -18,7 +18,7 @@ class UserRankingTest < ActiveSupport::TestCase
   	assert user_ranking.errors.empty?
   	assert_equal user_ranking.points, 10
 
-  	user_ranking = UserRanking.create_or_append(path: "aula/1/exercicio/2", user_id: @user_ranking.user_id, points: 5)
+  	user_ranking = UserRanking.create_or_append(path: "aula/1/exercicio/1", user_id: @user_ranking.user_id, points: 5)
   	assert user_ranking.errors.empty?
   	assert_equal user_ranking.points, 5
 
@@ -27,13 +27,7 @@ class UserRankingTest < ActiveSupport::TestCase
 
     parent_user = User.find_by(user_id: 1)
     assert_equal parent_user.points, 16
-    assert_equal parent_user.score[:exercicio], 1
-
-    user_ranking = UserRanking.create_or_append(path: "aula/1/exercicio/2", user_id: @user_ranking.user_id, points: 5)
-  
-    parent_user = User.find_by(user_id: 1)
-    assert_equal parent_user.points, 21
-    assert_equal parent_user.score[:exercicio], 1    
+    assert_equal parent_user.score[:exercicio], 2
 
   end
 
@@ -70,6 +64,11 @@ class UserRankingTest < ActiveSupport::TestCase
     assert_not  parent_user.score[:aula]
     assert_not  parent_user.score[:video]
 
+  end
+
+  test "should validate already existent path" do
+    UserRanking.create_or_append(path: "aula/1/exercicio/2", user_id: @user_ranking.user_id, points: 10)
+    assert_raises(ExistentRankingException) {UserRanking.create_or_append(path: "aula/1/exercicio/2", user_id: @user_ranking.user_id, points: 10)    }
   end
 
 

@@ -52,10 +52,8 @@ class UserRanking
   	user_ranking.with(collection: collection_name).save!
     
     if (first)
-    
-      if (user_ranking.was_a_new_record)
-        user_ranking.verify_children_status(path,user,user_ranking)
-      end
+      raise ExistentRankingException.new("Path #{path} for user #{user_id} already exists") unless user_ranking.was_a_new_record
+      user_ranking.verify_children_status(path,user,user_ranking)
     else
       user_ranking.verify_children_status(path,user,user_ranking) unless user_ranking.done
     end
