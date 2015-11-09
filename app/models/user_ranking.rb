@@ -17,6 +17,10 @@ class UserRanking
 
   before_save :check_new_record
 
+  def ranking_paths
+    @@structure||=Path.first.structure
+  end
+
   def check_new_record
     @was_a_new_record = new_record?
     return true
@@ -40,7 +44,48 @@ class UserRanking
     user_ranking.points=points
     
   	user_ranking.with(collection: collection_name).save!
+
+    #verify_children_status(user_ranking)
+
     user_ranking
+  end
+
+  def self.verify_children_status(user_ranking)
+
+    children_paths = user_ranking.children_paths
+    p "=====> path: #{user_ranking.path}"
+    return unless children_paths
+    p "=========> children paths: #{children_paths} size: #{children_paths.length} all: #{UserRanking.all.entries}"
+
+    children = UserRanking.with(collection: get_collection_name(user_ranking.path))
+      .where(user_id: user_ranking.user_id, path: {"$in": children_paths})
+    
+    p "children: #{children.first.to_json}"
+
+    count = children.size
+
+    #p "====> count: #{count} children: #{children_paths.length}"
+    #User.append_points(user_ranking.user_id, user_ranking.points, [user_ranking.path]) if count == children_paths.length
+  end
+
+  def children_paths
+    
+    level = ranking_paths
+    
+    path.split('/').each do |part|
+    
+      level = level[part.to_s] rescue next
+    end
+    
+    if level.is_a?(Hash)
+      children_paths = []
+      level.each do |k,v|
+        children_paths << v.map {|entry| "#{path}/#{k}/#{entry}"}
+      end
+    
+      return children_paths.flatten
+    end
+    nil
   end
 
   def self.find_in_path(options)
@@ -81,11 +126,12 @@ class UserRanking
 
   	initial = 0
     score_paths = [path_parts[length-2]]
+    
   	pairs.times do |position|
   		parent_path = path_parts.slice(0,initial+=2)
   			.map(&:inspect).join('/').gsub(/\\/,'').gsub(/"/,'')
       #score_paths << parent_path.split('/').first
-  		UserRanking.append_points(user_id: params[:user_id], path: parent_path, points: points)
+  		parent_ranking = UserRanking.append_points(user_id: params[:user_id], path: parent_path, points: points)
   	end
 
   	user_ranking = UserRanking.append_points(params)

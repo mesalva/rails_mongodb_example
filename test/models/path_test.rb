@@ -56,7 +56,7 @@ class PathTest < ActiveSupport::TestCase
   end
 
   test "should merge a path sucessfully" do
-	path = Path.create(structure: @set)
+	  path = Path.create(structure: @set)
   	assert_equal path.structure, @set
 
   	uset = @set.merge({:teste => 1})
