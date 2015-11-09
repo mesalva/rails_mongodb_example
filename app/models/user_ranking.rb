@@ -49,7 +49,7 @@ class UserRanking
     
     raise ExistentRankingException.new("Path #{path} for user #{user_id} already exists") if (first && user_ranking.id)
     
-    user_ranking.points=points
+    user_ranking.points+=points
     
   	user_ranking.with(collection: collection_name).save!
     
