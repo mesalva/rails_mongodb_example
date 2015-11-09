@@ -19,6 +19,8 @@ class UserRanking
 
   def ranking_paths
     @@structure||=Path.first.structure
+  rescue
+    {}
   end
 
   def check_new_record
@@ -34,9 +36,10 @@ class UserRanking
     path.split('/')[0..1].map(&:inspect).join('_').gsub(/\\/,'').gsub(/"/,'')
   end
 
-  def self.append_points(params,user)
+  def self.append_points(params,user,first)
   	points = params[:points].to_i
     path = params[:path]
+    #p "==============> input path: #{path}"
     user_id = params[:user_id]
     collection_name = get_collection_name(path)
     #p "===============> collection name: #{collection_name}"
@@ -46,39 +49,50 @@ class UserRanking
     
   	user_ranking.with(collection: collection_name).save!
     
-    if (user_ranking.was_a_new_record)
-      path_parts = path.split('/')
-      length = path_parts.length
-      resource = path_parts[length-2]
-      user.append_resource(resource)
+    if (first)
+      #p "===> first: #{first}"
+      #p "===> new record: #{user_ranking.was_a_new_record}"
+      if (user_ranking.was_a_new_record)
+        user_ranking.verify_children_status(path,user)
+      end
+    else
+      user_ranking.verify_children_status(path,user)
     end
     
-
-
     user_ranking
   end
 
-  def self.verify_children_status(user_ranking)
+  def verify_children_status(path,user)
 
-    children_paths = user_ranking.children_paths
+    path_parts = path.split('/')
+    length = path_parts.length
+    resource = path_parts[length-2]
+    #user.append_resource(resource)
+
+    children_paths = self.children_paths
     #p "=====> path: #{user_ranking.path}"
-    return unless children_paths
-    #p "=========> children paths: #{children_paths} size: #{children_paths.length} all: #{UserRanking.all.entries}"
-
-    children = UserRanking.with(collection: get_collection_name(user_ranking.path))
-      .where(user_id: user_ranking.user_id, path: {"$in": children_paths})
     
-    #p "children: #{children.first.to_json}"
-
-    count = children.size
-
-    #p "====> count: #{count} children: #{children_paths.length}"
-    #User.append_points(user_ranking.user_id, user_ranking.points, [user_ranking.path]) if count == children_paths.length
+    #p "=========> children paths: #{children_paths} size: #{children_paths.length} all: #{UserRanking.all.entries}"
+    mark_as_done = true
+    if children_paths
+      #p "=============> children paths: #{children_paths}"
+      count = UserRanking.with(collection: UserRanking.get_collection_name(self.path))
+        .where(user_id: self.user_id, path: {"$in": children_paths}).count
+      mark_as_done = (count == children_paths.length)
+      #p "=============> count: #{count}"
+      #p "=============> all: #{UserRanking.all.entries}"
+      #p "=============> children_paths: #{children_paths}"
+      #p "=============> user score antes: #{user.score}"
+    end
+    #p "=========> mark as done: #{mark_as_done}"
+    user.append_resource(resource) if mark_as_done
+    #p "=============> user score depois: #{user.score}"
   end
 
   def children_paths
     
     level = ranking_paths
+    return nil unless level
     
     path.split('/').each do |part|
     
@@ -134,7 +148,7 @@ class UserRanking
     loop do
       break if position < 1
       path = path_parts.slice(0,position).map(&:inspect).join('/').gsub(/\\/,'').gsub(/"/,'')
-      user_ranking = UserRanking.append_points(params.merge(path: path),user)
+      user_ranking = UserRanking.append_points(params.merge(path: path),user,(first_user_ranking.nil?))
       first_user_ranking||=user_ranking
       #p "=====> path: #{path}"
       position-=2

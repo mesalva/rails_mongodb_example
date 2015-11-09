@@ -31,6 +31,8 @@ class ActiveSupport::TestCase
 	  # Load the fixtures to test database
 	  fixture_some_data = Mongo::Fixture.new :ranking, connection
 
+    #sleep 0.5
+
   end
   
 

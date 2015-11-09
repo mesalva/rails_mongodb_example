@@ -6,11 +6,14 @@ class UserRankingsIntegrationTest < ActionDispatch::IntegrationTest
 
   setup do
     @user_ranking = UserRanking.find_by(path: "aula/1/exercicio/1", user_id: 1)
+    @set = {:aula => {1 => {:exercicio => [1,2], :videos => [1,2]}, 2 => {:exercicio => [1,2]}}}
+    path = Path.create(structure: @set)
   end
 
   test "should get existent path index" do
     get "/aula/1/exercicio/1"
     assert_response :success
+    #p "=======> body: #{@response.body}"
     assert assigns(:user_rankings)
   end
 
@@ -78,7 +81,7 @@ class UserRankingsIntegrationTest < ActionDispatch::IntegrationTest
   test "should paginate ranking results" do
     10.times do |time|
       post "/aula/1/exercicio/2", user_ranking: {points: time + 1, user_id: time + 1}
-      p "===========> body: #{@response.body}"
+      #p "===========> body: #{@response.body}"
       assert_response :created
     end
 
