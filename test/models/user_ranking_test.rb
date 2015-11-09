@@ -57,7 +57,7 @@ class UserRankingTest < ActiveSupport::TestCase
     #assert_equal parent_user.points, 41
     assert_equal parent_user.score[:exercicio], 2        
     assert_equal parent_user.score[:video], 2 
-    assert_equal parent_user.score[:aula], 1
+    #assert_equal parent_user.score[:aula], 1
 
   end
 
