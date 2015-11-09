@@ -19,18 +19,19 @@ class User
   	self.points||=0
   end
 
-  def self.append_points(user_id, points, resource_types)
-    user = User.find_or_create_by(user_id: user_id)
-    user.points+=points
-    
-    score = user.score || {}
-    resource_types.each do |resource_type|
-      key = resource_type.to_sym
-      value = score[key]
-      score[key] =  value ? (value + 1) : 1
-    end
+  def append_points(points)
+    self.points+=points
+    self.save!
+  end
 
-    user.score = score
-    user.save!
+  def append_resource(resource)
+    
+    self.score||= {}
+    
+    key = resource.to_sym
+    value = self.score[key]
+    self.score[key] =  value ? (value + 1) : 1
+    
+    self.save!
   end
 end

@@ -34,9 +34,10 @@ class UserRanking
     path.split('/')[0..1].map(&:inspect).join('_').gsub(/\\/,'').gsub(/"/,'')
   end
 
-  def self.append_points(params)
+  def self.append_points(params,user)
   	points = params[:points].to_i
     path = params[:path]
+    user_id = params[:user_id]
     collection_name = get_collection_name(path)
     #p "===============> collection name: #{collection_name}"
   	user_ranking = UserRanking.with(collection: collection_name).find_or_initialize_by(user_id: params[:user_id], path: path)
@@ -44,8 +45,15 @@ class UserRanking
     user_ranking.points=points
     
   	user_ranking.with(collection: collection_name).save!
+    
+    if (user_ranking.was_a_new_record)
+      path_parts = path.split('/')
+      length = path_parts.length
+      resource = path_parts[length-2]
+      user.append_resource(resource)
+    end
+    
 
-    #verify_children_status(user_ranking)
 
     user_ranking
   end
@@ -53,14 +61,14 @@ class UserRanking
   def self.verify_children_status(user_ranking)
 
     children_paths = user_ranking.children_paths
-    p "=====> path: #{user_ranking.path}"
+    #p "=====> path: #{user_ranking.path}"
     return unless children_paths
-    p "=========> children paths: #{children_paths} size: #{children_paths.length} all: #{UserRanking.all.entries}"
+    #p "=========> children paths: #{children_paths} size: #{children_paths.length} all: #{UserRanking.all.entries}"
 
     children = UserRanking.with(collection: get_collection_name(user_ranking.path))
       .where(user_id: user_ranking.user_id, path: {"$in": children_paths})
     
-    p "children: #{children.first.to_json}"
+    #p "children: #{children.first.to_json}"
 
     count = children.size
 
@@ -118,27 +126,26 @@ class UserRanking
     path.slice!(0) if path.starts_with?("/")
   	points = params[:points].to_i
   	user_id = params[:user_id].to_i
+    user = User.find_or_create_by(user_id: user_id)
   	path_parts = path.split('/')
-  	length = path_parts.length
-  	return if length <= 2
+  	position = path_parts.length
+  	return if position <= 2
+    first_user_ranking=nil
+    loop do
+      break if position < 1
+      path = path_parts.slice(0,position).map(&:inspect).join('/').gsub(/\\/,'').gsub(/"/,'')
+      user_ranking = UserRanking.append_points(params.merge(path: path),user)
+      first_user_ranking||=user_ranking
+      #p "=====> path: #{path}"
+      position-=2
+    end 
 
-  	pairs = length/2 - 1
 
-  	initial = 0
-    score_paths = [path_parts[length-2]]
-    
-  	pairs.times do |position|
-  		parent_path = path_parts.slice(0,initial+=2)
-  			.map(&:inspect).join('/').gsub(/\\/,'').gsub(/"/,'')
-      #score_paths << parent_path.split('/').first
-  		parent_ranking = UserRanking.append_points(user_id: params[:user_id], path: parent_path, points: points)
-  	end
+    score_paths = [path_parts[(path_parts.length)-2]]
+    #verify_children_status(user_ranking)
+    user.append_points(points)
 
-  	user_ranking = UserRanking.append_points(params)
-
-    User.append_points(user_id, points, user_ranking.was_a_new_record ? score_paths : [])
-
-    user_ranking
+    first_user_ranking
   end
 
 
