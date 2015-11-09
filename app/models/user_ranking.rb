@@ -47,12 +47,13 @@ class UserRanking
     
   	user_ranking = UserRanking.with(collection: collection_name).find_or_initialize_by(user_id: params[:user_id], path: path)
     
+    raise ExistentRankingException.new("Path #{path} for user #{user_id} already exists") if (first && user_ranking.id)
+    
     user_ranking.points=points
     
   	user_ranking.with(collection: collection_name).save!
     
     if (first)
-      raise ExistentRankingException.new("Path #{path} for user #{user_id} already exists") unless user_ranking.was_a_new_record
       user_ranking.verify_children_status(path,user,user_ranking)
     else
       user_ranking.verify_children_status(path,user,user_ranking) unless user_ranking.done
