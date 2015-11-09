@@ -7,6 +7,8 @@ class User
 
   field :score, type: Hash  
 
+  field :resources, type: Hash
+
   validates_uniqueness_of :user_id
   validates_presence_of :user_id, :points
 

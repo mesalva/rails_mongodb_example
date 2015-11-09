@@ -5,6 +5,8 @@ class UserRanking
   field :path, type: String
   field :points, type: Integer
 
+  field :done, type: Boolean
+
   validates_uniqueness_of :path, :scope => :user_id
   validates_presence_of :user_id, :points
 
@@ -53,16 +55,16 @@ class UserRanking
       #p "===> first: #{first}"
       #p "===> new record: #{user_ranking.was_a_new_record}"
       if (user_ranking.was_a_new_record)
-        user_ranking.verify_children_status(path,user)
+        user_ranking.verify_children_status(path,user,user_ranking)
       end
     else
-      user_ranking.verify_children_status(path,user)
+      user_ranking.verify_children_status(path,user,user_ranking) unless user_ranking.done
     end
     
     user_ranking
   end
 
-  def verify_children_status(path,user)
+  def verify_children_status(path,user,user_ranking)
 
     path_parts = path.split('/')
     length = path_parts.length
@@ -70,7 +72,7 @@ class UserRanking
     #user.append_resource(resource)
 
     children_paths = self.children_paths
-    #p "=====> path: #{user_ranking.path}"
+    #p "=====> path: #{path}"
     
     #p "=========> children paths: #{children_paths} size: #{children_paths.length} all: #{UserRanking.all.entries}"
     mark_as_done = true
@@ -85,7 +87,12 @@ class UserRanking
       #p "=============> user score antes: #{user.score}"
     end
     #p "=========> mark as done: #{mark_as_done}"
-    user.append_resource(resource) if mark_as_done
+    if (mark_as_done)
+      user.append_resource(resource) if mark_as_done
+      user_ranking.done = true
+      user_ranking.save!
+    end
+    
     #p "=============> user score depois: #{user.score}"
   end
 
