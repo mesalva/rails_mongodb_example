@@ -12,8 +12,8 @@ class UserRankingsControllerTest < ActionController::TestCase
   end
 
   test "should create user_ranking" do
-    post :create, user_ranking: { path: @user_ranking.path, points: @user_ranking.points, user_id: @user_ranking.user_id }
-    #p "===+> body: #{@response.body}"
+    post :create, user_ranking: { path: "aula/1/exercicio/4", points: @user_ranking.points, user_id: @user_ranking.user_id }
+    #p "\n\n\n ===+> body: #{@response.body}"
     assert_response :created
   end
 

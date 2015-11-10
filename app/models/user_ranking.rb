@@ -19,6 +19,12 @@ class UserRanking
 
   before_save :check_new_record
 
+  after_initialize :init
+
+  def init
+    self.points||=0
+  end
+
   def ranking_paths
     @@structure||=Path.first.structure
   rescue
@@ -45,13 +51,17 @@ class UserRanking
     user_id = params[:user_id]
     collection_name = get_collection_name(path)
     
-  	user_ranking = UserRanking.with(collection: collection_name).find_or_initialize_by(user_id: params[:user_id], path: path)
-    
-    raise ExistentRankingException.new("Path #{path} for user #{user_id} already exists") if (first && user_ranking.id)
-    
-    user_ranking.points+=points
-    
-  	user_ranking.with(collection: collection_name).save!
+    if (first)
+      user_ranking = UserRanking.with(collection: collection_name).create(user_id: params[:user_id], path: path, points: points)
+    else
+      user_ranking = UserRanking.with(collection: collection_name).find_or_initialize_by(user_id: params[:user_id], path: path)
+      user_ranking.points+=points
+      user_ranking.with(collection: collection_name).save!
+    end
+  	
+    #p "==> first: #{first} new record: #{user_ranking.was_a_new_record}"
+
+    #raise ExistentRankingException.new("Path #{path} for user #{user_id} already exists") if (first && !user_ranking.was_a_new_record)
     
     if (first)
       user_ranking.verify_children_status(path,user,user_ranking)
@@ -73,7 +83,8 @@ class UserRanking
     
     mark_as_done = true
     if children_paths
-    
+      
+      #sleep 0.01
       count = UserRanking.with(collection: UserRanking.get_collection_name(self.path))
         .where(user_id: self.user_id, path: {"$in": children_paths}).count
       mark_as_done = (count == children_paths.length)

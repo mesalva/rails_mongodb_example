@@ -8,22 +8,22 @@ class UserRankingTest < ActiveSupport::TestCase
 
   setup do
     @user_ranking = UserRanking.find_by(path: "aula/1/exercicio/1", user_id: 1)
-    @set = {:aula => {1 => {:exercicio => [1,2], :video => [1,2]}, 2 => {:exercicio => [1,2]}}}
+    @set = {:aula => {1 => {:exercicio => [3,4], :video => [1,2]}, 2 => {:exercicio => [1,2]}}}
     Path.destroy_all
     path = Path.create(structure: @set)
   end
 
   test "should append points to a ranking sucessfully" do
-  	user_ranking = UserRanking.create_or_append(path: "aula/1/exercicio/2", user_id: @user_ranking.user_id, points: 10)
+  	user_ranking = UserRanking.create_or_append(path: "aula/1/exercicio/3", user_id: @user_ranking.user_id, points: 10)
   	assert user_ranking.errors.empty?
   	assert_equal user_ranking.points, 10
 
-  	user_ranking = UserRanking.create_or_append(path: "aula/1/exercicio/1", user_id: @user_ranking.user_id, points: 5)
+  	user_ranking = UserRanking.create_or_append(path: "aula/1/exercicio/4", user_id: @user_ranking.user_id, points: 5)
   	assert user_ranking.errors.empty?
   	assert_equal user_ranking.points, 5
 
     parent_ranking = UserRanking.find_in_path(path: "aula/1", user_id: 1)
-    assert_equal parent_ranking.points, 5
+    assert_equal parent_ranking.points, 15
 
     parent_user = User.find_by(user_id: 1)
     assert_equal parent_user.points, 16
@@ -39,8 +39,8 @@ class UserRankingTest < ActiveSupport::TestCase
   end
 
   test "should mark parent as done" do
-    UserRanking.create_or_append(path: "aula/1/exercicio/2", user_id: @user_ranking.user_id, points: 10)
-    UserRanking.create_or_append(path: "aula/1/exercicio/1", user_id: @user_ranking.user_id, points: 10)
+    UserRanking.create_or_append(path: "aula/1/exercicio/3", user_id: @user_ranking.user_id, points: 10)
+    UserRanking.create_or_append(path: "aula/1/exercicio/4", user_id: @user_ranking.user_id, points: 10)
 
     UserRanking.create_or_append(path: "aula/1/video/1", user_id: @user_ranking.user_id, points: 10)
     UserRanking.create_or_append(path: "aula/1/video/2", user_id: @user_ranking.user_id, points: 10)
@@ -51,7 +51,7 @@ class UserRankingTest < ActiveSupport::TestCase
     #assert_equal parent_user.points, 41
     assert_equal parent_user.score[:exercicio], 2        
     assert_equal parent_user.score[:video], 2 
-    #assert_equal parent_user.score[:aula], 1
+    assert_equal parent_user.score[:aula], 1
 
   end
 
@@ -68,7 +68,7 @@ class UserRankingTest < ActiveSupport::TestCase
 
   test "should validate already existent path" do
     UserRanking.create_or_append(path: "aula/1/exercicio/2", user_id: @user_ranking.user_id, points: 10)
-    assert_raises(ExistentRankingException) {UserRanking.create_or_append(path: "aula/1/exercicio/2", user_id: @user_ranking.user_id, points: 10)    }
+    assert_raises(Mongoid::Errors::Validations) {UserRanking.create_or_append(path: "aula/1/exercicio/2", user_id: @user_ranking.user_id, points: 10)    }
   end
 
 
