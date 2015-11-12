@@ -8,7 +8,7 @@
 3. Inside the application folder, run
   
   bundle install
-  unicorn -p 3000
+  unicorn -p 3000  
 
 4. To create a ranking entry, do POST /aula/1/exercicio/1 {user_id: 1, points: 2}
 5. To retrieve a ranking path, do GET /aula/1/exercicio/1
@@ -19,6 +19,6 @@ To run with docker, use
 
 1. Run a mongo image
 2. build app docker file: sudo docker build -t mesalva/ranking_points .
-2. Run the app docker image: sudo docker run -p 3000:3000 --link <you_mongo_name>:mongo mesalva/ranking_points
+2. Run the app docker image: sudo docker run -p 3000:3000 --link <you_mongo_name>:mongo  mesalva/ranking_points
 
 3. Try it!!

@@ -16,4 +16,3 @@
 !/log/.keep
 /tmp
 shared/log
-shared/pids
