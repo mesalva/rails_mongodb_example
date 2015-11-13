@@ -1,0 +1,9 @@
+  MOPED: 127.0.0.1:27017 COMMAND      database=admin command={:ismaster=>1} runtime: 1.0131ms
+
+
+Started GET "/aula/1/exercicio/1" for 127.0.0.1 at 2015-11-13 10:06:09 -0200
+Processing by UserRankingsController#path_index as */*
+  Parameters: {"all"=>"aula/1/exercicio/1"}
+  MOPED: 127.0.0.1:27017 QUERY        database=test collection=aula_1 selector={"$query"=>{"path"=>{"$all"=>["aula/1/exercicio/1"]}}, "$orderby"=>{"points"=>-1}} flags=[] limit=10 skip=0 batch_size=nil fields=nil runtime: 0.8614ms
+  Rendered user_rankings/path_index.json.jbuilder (4.0ms)
+Completed 200 OK in 21ms (Views: 8.6ms | ActiveRecord: 0.0ms)
