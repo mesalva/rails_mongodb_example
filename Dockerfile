@@ -9,6 +9,6 @@ RUN git clone https://github.com/mesalva/ranking_points
 WORKDIR ranking_points
 RUN git checkout docker_composer
 RUN bundle install
+RUN chmod 777 run.sh
 EXPOSE 3000
-
-CMD git pull origin docker_composer && RAILS_ENV=production bundle install && RAILS_ENV=production unicorn -p 3000
+CMD ./run.sh
